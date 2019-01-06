@@ -1,16 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { StaticQuery, graphql } from 'gatsby'
-import { createGlobalStyle } from 'styled-components';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import styled, { createGlobalStyle } from 'styled-components';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.css';
-import Header from './header';
-
-const theme = createMuiTheme();
+import Header from '../Header';
+import theme from './theme';
 
 const GlobalStyles = createGlobalStyle`
   body {
     margin: 0;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   }
 
   .line-numbers .line-numbers-rows {
@@ -20,32 +20,31 @@ const GlobalStyles = createGlobalStyle`
   }
 `;
 
+const query = graphql`
+  query SiteTitleQuery {
+    site {
+      siteMetadata {
+        title
+      }
+    }
+  }
+`;
+
+const ContentWrapper = styled.div`
+  overflow: hidden;
+`;
+
 const Layout = ({ children }) => (
   <MuiThemeProvider theme={theme}>
     <StaticQuery
-      query={graphql`
-        query SiteTitleQuery {
-          site {
-            siteMetadata {
-              title
-            }
-          }
-        }
-      `}
+      query={query}
       render={data => (
         <>
+          <GlobalStyles />
           <Header siteTitle={data.site.siteMetadata.title} />
-          <div
-            style={{
-              margin: `0 auto`,
-              maxWidth: 960,
-              padding: `0px 1.0875rem 1.45rem`,
-              paddingTop: 0,
-            }}
-          >
-            <GlobalStyles />
+          <ContentWrapper>
             {children}
-          </div>
+          </ContentWrapper>
         </>
       )}
     />

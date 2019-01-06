@@ -1,15 +1,15 @@
 import React from 'react';
-import Layout from '../components/layout';
+import Layout from '../components/Layout';
 import SEO from '../components/seo';
 import 'typeface-roboto';
+import Masthead from '../components/Masthead';
+import SellingPoints from '../components/SellingPoints';
 
 const IndexPage = () => (
   <Layout>
     <SEO title="Home" />
-    <h1>Wealth</h1>
-    <p>
-      JavaScript library for handling money calculation, allocation, formatting, serialization, and currency handling.
-    </p>
+    <Masthead />
+    <SellingPoints />
   </Layout>
 );
 

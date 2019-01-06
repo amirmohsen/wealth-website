@@ -1,7 +1,13 @@
 import React from 'react';
+import styled from 'styled-components';
 import { graphql } from 'gatsby';
-import Layout from '../components/layout';
+import Layout from '../components/Layout';
 import SEO from '../components/seo';
+import Container from '../components/Container';
+
+const BodyContainer = styled(Container)`
+  padding: 0 1.0875rem 1.45rem;
+`;
 
 const Doc = ({
   data,
@@ -11,9 +17,11 @@ const Doc = ({
   return (
     <Layout>
       <SEO title={frontmatter.title} />
-      <div
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
+      <BodyContainer>
+        <div
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
+      </BodyContainer>
     </Layout>
   );
 };

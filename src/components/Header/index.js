@@ -1,14 +1,15 @@
-import { Link } from 'gatsby'
-import PropTypes from 'prop-types'
-import React from 'react'
+import { Link } from 'gatsby';
+import PropTypes from 'prop-types';
+import React from 'react';
 import styled from 'styled-components';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withTheme } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
+import HomeLink from './HomeLink';
+import Container from '../Container';
 
 const InnerWrap = styled.div`
   display: flex;
@@ -41,11 +42,6 @@ const NavListLink = styled(Link)`
   &:focus {
     text-decoration: none;
   }
-`;
-
-const HomeLink = styled(Link)`
-  color: white;
-  text-decoration: none;
 `;
 
 const Grow = styled.div`
@@ -112,42 +108,40 @@ const SearchInput = withTheme()(styled.input`
 
 const Header = ({ siteTitle }) => (
   <AppBar position="sticky">
-    <Toolbar>
-      <HomeLink
-        to="/"
-      >
-        <Typography variant="h2" color="inherit" noWrap>
+    <Container>
+      <Toolbar disableGutters>
+        <HomeLink>
           {siteTitle}
-        </Typography>
-      </HomeLink>
-      <InnerWrap>
-        <Nav>
-            <NavList>
-              <NavListItem>
-                <NavListLink to="/getting-started">
-                  Getting Started
-                </NavListLink>
-                <NavListLink to="/guides">
-                  Guides
-                </NavListLink>
-                <NavListLink to="/reference">
-                  API Reference
-                </NavListLink>
-              </NavListItem>
-            </NavList>
-        </Nav>
-      </InnerWrap>
-      <Grow />
-      <SearchWrapper>
-        <SearchIconWrapper>
-          <SearchIcon />
-        </SearchIconWrapper>
-        <SearchInputBase
-          inputComponent={SearchInput}
-          placeholder="Search…"
-        />
-      </SearchWrapper>
-    </Toolbar>
+        </HomeLink>
+        <InnerWrap>
+          <Nav>
+              <NavList>
+                <NavListItem>
+                  <NavListLink to="/getting-started">
+                    Getting Started
+                  </NavListLink>
+                  <NavListLink to="/guides">
+                    Guides
+                  </NavListLink>
+                  <NavListLink to="/reference">
+                    API Reference
+                  </NavListLink>
+                </NavListItem>
+              </NavList>
+          </Nav>
+        </InnerWrap>
+        <Grow />
+        <SearchWrapper>
+          <SearchIconWrapper>
+            <SearchIcon />
+          </SearchIconWrapper>
+          <SearchInputBase
+            inputComponent={SearchInput}
+            placeholder="Search…"
+          />
+        </SearchWrapper>
+      </Toolbar>
+    </Container>
   </AppBar>
 );
 
