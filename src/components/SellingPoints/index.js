@@ -1,38 +1,19 @@
 import React from 'react';
-import styled from 'styled-components';
 import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import AppBar from '@material-ui/core/AppBar';
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
 import InnerListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Hidden from '@material-ui/core/Hidden';
-
-const GridWrapper = styled.div`
-  padding: 12px;
-`;
-
-const GridContainer = ({ children }) => (
-  <GridWrapper>
-    <Grid container spacing={24}>
-      {children}
-    </Grid>
-  </GridWrapper>
-);
+import { GridContainer, GridItem as InnerGridItem } from '../Grid';
 
 const GridItem = ({ title, children, ...props }) => (
-  <Grid item {...props}>
-      <Card>
-        <CardContent>
-          <Typography gutterBottom variant="h6" component="h2">
-            {title}
-          </Typography>
-          {children}
-        </CardContent>
-      </Card>
-  </Grid>
+  <InnerGridItem item {...props}>
+    <Typography gutterBottom variant="h6" component="h2">
+      {title}
+    </Typography>
+    {children}
+  </InnerGridItem>
 );
 
 const ListItem = ({ title, subtitle }) => (
@@ -52,7 +33,7 @@ const First = () => (
     />
     <ListItem
       title="Money Calculation"
-      subtitle="Addition, subtraction, multiplication, division, ceiling, and floring"
+      subtitle="Addition, subtraction, multiplication, division and rounding"
     />
   </>
 );
@@ -112,28 +93,26 @@ const MobileFeatures = () => (
 );
 
 const SellingPoints = () => (
-  <AppBar position="static">
-    <GridContainer>
-      <GridItem title="Features" xs={12}>
-        <Hidden smDown>
-          <DesktopFeatures />
-        </Hidden>
-        <Hidden mdUp>
-          <MobileFeatures />
-        </Hidden>
-      </GridItem>
-      <GridItem title="Immutable" xs={12} sm={6}>
-        <Typography component="p" variant="subtitle1">
-          All instances of Money and Currency are immutable. All operations return a new instance.
-        </Typography>
-      </GridItem>
-      <GridItem title="Functional / Object-oriented" xs={12} sm={6}>
-        <Typography component="p" variant="subtitle1">
-          Operations on a Money instance can be done in both a functional or object-oriented way.
-        </Typography>
-      </GridItem>
-    </GridContainer>
-  </AppBar>
+  <GridContainer>
+    <GridItem title="Features" xs={12}>
+      <Hidden smDown>
+        <DesktopFeatures />
+      </Hidden>
+      <Hidden mdUp>
+        <MobileFeatures />
+      </Hidden>
+    </GridItem>
+    <GridItem title="Immutable" xs={12} sm={6}>
+      <Typography component="p" variant="subtitle1">
+        All instances of Money and Currency are immutable. All operations return a new instance.
+    </Typography>
+    </GridItem>
+    <GridItem title="Functional / Object-oriented" xs={12} sm={6}>
+      <Typography component="p" variant="subtitle1">
+        Operations on a Money instance can be done in both a functional or object-oriented way.
+    </Typography>
+    </GridItem>
+  </GridContainer>
 );
 
 export default SellingPoints;
