@@ -1,4 +1,3 @@
-import { Link } from 'gatsby';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
@@ -10,6 +9,7 @@ import { withTheme } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import HomeLink from './HomeLink';
 import Container from '../Container';
+import Navigation from './Navigation';
 
 const InnerWrap = styled.div`
   display: flex;
@@ -19,31 +19,6 @@ const InnerWrap = styled.div`
   padding: 1.45rem 1.0875rem;
 `;
 
-const Nav = styled.nav`
-  margin-left: 50px;
-`;
-
-const NavList = styled.ul`
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
-`;
-
-const NavListItem = styled.li`
-  margin: 0;
-`;
-
-const NavListLink = styled(Link)`
-  color: white;
-  margin-right: 30px;
-
-  &,
-  &:hover,
-  &:focus {
-    text-decoration: none;
-  }
-`;
-
 const Grow = styled.div`
   flex-grow: 1;
 `;
@@ -51,18 +26,17 @@ const Grow = styled.div`
 const SearchWrapper = withTheme()(styled.div`
   && {
     position: relative;
-    border-radius: ${({ theme }) => theme.shape.borderRadius};
+    border-radius: ${({ theme }) => theme.shape.borderRadius}px;
     background-color: ${({ theme }) => fade(theme.palette.common.white, 0.15)};
 
     &:hover {
       background-color: ${({ theme }) => fade(theme.palette.common.white, 0.25)};
     }
 
-    margin-left: 0;
+    margin-left: auto;
     width: 100%;
 
     ${({ theme }) => theme.breakpoints.up('sm')} {
-      margin-left: ${({ theme }) => theme.spacing.unit};
       width: auto;
     }
   }
@@ -114,21 +88,7 @@ const Header = ({ siteTitle }) => (
           {siteTitle}
         </HomeLink>
         <InnerWrap>
-          <Nav>
-              <NavList>
-                <NavListItem>
-                  <NavListLink to="/getting-started">
-                    Getting Started
-                  </NavListLink>
-                  <NavListLink to="/guides">
-                    Guides
-                  </NavListLink>
-                  <NavListLink to="/reference">
-                    API Reference
-                  </NavListLink>
-                </NavListItem>
-              </NavList>
-          </Nav>
+          <Navigation />
         </InnerWrap>
         <Grow />
         <SearchWrapper>

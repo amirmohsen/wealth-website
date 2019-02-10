@@ -11,7 +11,17 @@ const IndexPage = () => (
     <SEO title="Home" />
     <Masthead />
     <SellingPoints />
-    <ConfigurableCodeBlock />
+    <ConfigurableCodeBlock>
+      {`
+        import { Money } from 'wealth';
+        import { add, remove, parse } from 'wealth/fn';
+
+        parse('$15.85');
+        const moneyA = new Money('15.00', 'USD');
+        const moneyB = new Money('30.00', 'USD');
+        const total = add(moneyA, moneyB);
+      `}
+    </ConfigurableCodeBlock>
   </Layout>
 );
 
