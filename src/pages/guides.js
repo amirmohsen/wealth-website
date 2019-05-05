@@ -71,13 +71,49 @@ const GuidesPage = () => (
     <Topic>Currency</Topic>
     <ConfigurableCodeBlock>
       {`
+        import { Money, Currency } from 'wealth';
+        import {
+          getRegisteredCurrency,
+          getAllRegisteredCurrencies,
+          registerCurrency,
+          registerMultipleCurrencies,
+          isCurrencyRegistered,
+          deregisterCurrency
+        } from 'wealth/store';
+        import {
+          GBP
+        } from 'wealth/iso';
 
+        register(GBP);
+
+        register({
+          code: 'XBT',
+          symbol: 'Ƀ'
+        });
+
+        const gbpCurrencyInstance = new Currency('GBP');
+        const moneyA = new Money('900.00', gbpCurrencyInstance);
+        const moneyB = new Money('900.00', 'GBP');
+        const moneyC = new Money('900.00', 'XBT');
       `}
     </ConfigurableCodeBlock>
     <Topic>Formatting and Parsing</Topic>
     <ConfigurableCodeBlock>
       {`
+        import { Money } from 'wealth';
+        import { register } from 'wealth/store';
+        import { USD } from 'wealth/iso';
+        import { format } from 'wealth/fn';
 
+        register(USD);
+
+        const money = Money.init('5000.00', 'USD');
+        money.format() === '$5,000.00'
+        money.format({
+          pattern: '%ns%s%v',
+          thousandsSeparator: ',',
+          decimalSeparator: '.'
+        }) === '5 000,00 $'
       `}
     </ConfigurableCodeBlock>
     <Topic>Serialization</Topic>

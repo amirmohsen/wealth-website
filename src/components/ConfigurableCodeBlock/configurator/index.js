@@ -1,7 +1,7 @@
 const acorn = require('acorn');
 const walk = require('acorn-walk');
 const escodegen = require('escodegen');
-const splitAt = require('split-at');
+// const splitAt = require('split-at');
 
 const generateESM = ({
   importedNames
@@ -178,19 +178,19 @@ const handleImports = ({
   });
 };
 
-const splitSourceIntoCommentsAndCodeBlocks = (source) => {
-  const regex = /^\/\/.+$/gm;
-  let indices = [];
-  let match;
-  while (match = regex.exec(source)) {
-    indices = [
-      ...indices,
-      match.index,
-      match.index + match[0].length
-    ];
-  }
-  return splitAt(source, indices);
-};
+// const splitSourceIntoCommentsAndCodeBlocks = (source) => {
+//   const regex = /^\/\/.+$/gm;
+//   let indices = [];
+//   let match;
+//   while (match = regex.exec(source)) {
+//     indices = [
+//       ...indices,
+//       match.index,
+//       match.index + match[0].length
+//     ];
+//   }
+//   return splitAt(source, indices);
+// };
 
 const configurator = ({
   source,
