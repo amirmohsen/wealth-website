@@ -23,7 +23,8 @@ const Header = withTheme()(styled.h1`
 
 const TagLine = withTheme()(styled.div`
   font-size: 1.5rem;
-  margin: 0 0 40px 0;
+  margin: 0 10px 40px 10px;
+  text-align: center;
   color: #63b9ec;
 `);
 

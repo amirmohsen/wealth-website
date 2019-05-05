@@ -1,6 +1,6 @@
 ---
-path: '/guides'
-title: 'Guides'
+path: '/guides2'
+title: 'Guides 2'
 ---
 
 # Guides

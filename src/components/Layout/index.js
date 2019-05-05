@@ -6,6 +6,7 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.css';
 import Header from '../Header';
 import theme from './theme';
+import ConfigurableCodeBlockProvider from '../ConfigurableCodeBlock/Provider';
 
 const GlobalStyles = createGlobalStyle`
   body {
@@ -43,7 +44,9 @@ const Layout = ({ children }) => (
           <GlobalStyles />
           <Header siteTitle={data.site.siteMetadata.title} />
           <ContentWrapper>
-            {children}
+            <ConfigurableCodeBlockProvider>
+              {children}
+            </ConfigurableCodeBlockProvider>
           </ContentWrapper>
         </>
       )}

@@ -74,11 +74,11 @@ export default class MobileNavigation extends Component {
                         Guides
                       </MenuLink>
                     </MenuItem>
-                    <MenuItem onClick={this.handleClose}>
+                    {/* <MenuItem onClick={this.handleClose}>
                       <MenuLink to="/reference">
                         API Reference
                       </MenuLink>
-                    </MenuItem>
+                    </MenuItem> */}
                   </MenuList>
                 </ClickAwayListener>
               </Paper>

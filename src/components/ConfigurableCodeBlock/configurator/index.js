@@ -1,21 +1,14 @@
 const acorn = require('acorn');
 const walk = require('acorn-walk');
 const escodegen = require('escodegen');
+const splitAt = require('split-at');
 
 const generateESM = ({
   importedNames
 }) => {
   return importedNames.map(importedName => ({
     type: 'ImportDeclaration',
-    specifiers: [
-      {
-        type: 'ImportDefaultSpecifier',
-        local: {
-          type: 'Identifier',
-          name: importedName
-        }
-      }
-    ],
+    specifiers: [],
     source: {
       type: 'Literal',
       value: `wealth/methods/${importedName}`
@@ -25,35 +18,25 @@ const generateESM = ({
 
 const generateCJS = ({ importedNames }) => {
   return importedNames.map(importedName => ({
-    "type": "VariableDeclaration",
-    "declarations": [
-      {
-        "type": "VariableDeclarator",
-        "id": {
-          "type": "Identifier",
-          "name": importedName
-        },
-        "init": {
-          "type": "CallExpression",
-          "callee": {
-            "type": "Identifier",
-            "name": "require"
-          },
-          "arguments": [
-            {
-              "type": "Literal",
-              "value": `wealth/methods/${importedName}`
-            }
-          ]
+    "type": "ExpressionStatement",
+    "expression": {
+      "type": "CallExpression",
+      "callee": {
+        "type": "Identifier",
+        "name": "require"
+      },
+      "arguments": [
+        {
+          "type": "Literal",
+          "value": `wealth/node/methods/${importedName}`
         }
-      }
-    ],
-    "kind": "const"
+      ]
+    }
   }));
 };
 
 const convertToCJS = ({ importedNames, body, nodeIndex, source }) => {
-  source.replace('wealth', 'wealth/node');
+  const newSource = source.replace('wealth', 'wealth/node');
 
   const imports = importedNames
     .map(importedName => ({
@@ -88,7 +71,7 @@ const convertToCJS = ({ importedNames, body, nodeIndex, source }) => {
           "arguments": [
             {
               "type": "Literal",
-              "value": source
+              "value": newSource
             }
           ]
         }
@@ -148,7 +131,7 @@ const handleImports = ({
       let source = node.source.value;
       const nodeIndex = ancestors[0].body.indexOf(node);
 
-      if (node.specifiers[0].type === 'ImportDefaultSpecifier') {
+      if (!node.specifiers.length || node.specifiers[0].type === 'ImportDefaultSpecifier') {
         return;
       }
 
@@ -156,7 +139,6 @@ const handleImports = ({
 
       if (usageParadigm === 'oo' && source === 'wealth/fn') {
         let imports = [];
-
         if (importModularity === 'modular') {
           if (importType === 'esm') {
             imports = generateESM({
@@ -169,10 +151,12 @@ const handleImports = ({
             });
           }
         }
-
         ancestors[0].body.splice(nodeIndex, 1, ...imports);
-
         return;
+      }
+
+      if (usageParadigm === 'oo' && source === 'wealth' && importModularity === 'full') {
+        node.source.value = source = 'wealth/full';
       }
 
       if (importType === 'esm') {
@@ -194,17 +178,30 @@ const handleImports = ({
   });
 };
 
+const splitSourceIntoCommentsAndCodeBlocks = (source) => {
+  const regex = /^\/\/.+$/gm;
+  let indices = [];
+  let match;
+  while (match = regex.exec(source)) {
+    indices = [
+      ...indices,
+      match.index,
+      match.index + match[0].length
+    ];
+  }
+  return splitAt(source, indices);
+};
+
 const configurator = ({
   source,
   importType,
   usageParadigm,
   importModularity
 }) => {
+  // console.log(splitSourceIntoCommentsAndCodeBlocks(source));
   const parsed = acorn.parse(source, {
     sourceType: 'module'
   });
-
-  console.dir(parsed);
 
   handleImports({
     parsed,
@@ -212,8 +209,6 @@ const configurator = ({
     usageParadigm,
     importModularity
   });
-
-  console.dir(parsed);
 
   const code = escodegen.generate(parsed, {
     format: {

@@ -38,9 +38,9 @@ const DesktopNavigation = () => (
           <NavListLink to="/guides">
             Guides
           </NavListLink>
-          <NavListLink to="/reference">
+          {/* <NavListLink to="/reference">
             API Reference
-          </NavListLink>
+          </NavListLink> */}
         </NavListItem>
       </NavList>
     </Nav>
