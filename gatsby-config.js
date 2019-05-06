@@ -1,4 +1,5 @@
 module.exports = {
+  pathPrefix: '/wealth',
   siteMetadata: {
     title: `Wealth`,
     description: `Wealth is a money management JavaScript library.`,
