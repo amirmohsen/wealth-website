@@ -1,0 +1,74 @@
+version: 2
+
+defaults: &defaults
+  working_directory: ~/repo
+  docker:
+    - image: circleci/node:10.16
+
+jobs:
+  install:
+    <<: *defaults
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+          - wealth-v1-{{ checksum "yarn.lock" }}
+          # fallback to using the latest cache if no exact match is found
+          - wealth-v1-
+
+      - run:
+          name: Install Dependencies
+          command: yarn install --frozen-lockfile
+
+      - save_cache:
+          paths:
+            - ~/.cache/yarn
+          key: wealth-v1-{{ checksum "yarn.lock" }}
+
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - .
+
+  build:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Build website
+          command: yarn build
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - .
+
+  publish:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Setting git config
+          command: |
+            git config user.email "wealth-docs@wealth-docs.com"
+            git config user.name "wealth-docs"
+      - run:
+          name: Deploy docs to gh-pages branch
+          command: yarn publish:website
+
+workflows:
+  version: 2
+  build-publish:
+    jobs:
+      - install
+      - build:
+          requires:
+            - install
+      # - publish:
+      #     requires:
+      #       - build
+      #     filters:
+      #       branches:
+      #         only: master

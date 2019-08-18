@@ -46,10 +46,13 @@
   "scripts": {
     "build": "gatsby build --prefix-paths",
     "develop": "gatsby develop",
-    "start": "npm run develop",
-    "format": "prettier --write \"src/**/*.js\""
+    "start": "yarn develop",
+    "format": "prettier --write \"src/**/*.js\"",
+    "publish:website": "gh-pages --dist public --repo https://amirmohsen:${GH_TOKEN}@github.com/amirmohsen/wealth"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "gh-pages": "^2.1.1"
+  },
   "repository": "https://github.com/amirmohsen/wealth-website",
   "bugs": {
     "url": "https://github.com/amirmohsen/wealth-website/issues"
