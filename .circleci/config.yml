@@ -66,9 +66,9 @@ workflows:
       - build:
           requires:
             - install
-      # - publish:
-      #     requires:
-      #       - build
-      #     filters:
-      #       branches:
-      #         only: master
+      - publish:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
