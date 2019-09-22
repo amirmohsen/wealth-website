@@ -1,10 +1,11 @@
-import React from 'react';
-import Layout from '../components/Layout';
-import SEO from '../components/seo';
-import 'typeface-roboto';
-import styled from 'styled-components';
-import { withTheme } from '@material-ui/core/styles';
-import ConfigurableCodeBlock from '../components/ConfigurableCodeBlock';
+import React from 'react'
+import Layout from '../components/Layout'
+import SEO from '../components/seo'
+import 'typeface-roboto'
+import styled from 'styled-components'
+import { withTheme } from '@material-ui/core/styles'
+import ConfigurableCodeBlock from '../components/ConfigurableCodeBlock'
+import DarkWrapper from '../components/DarkWrapper'
 
 const Header = withTheme()(styled.h1`
   font-size: 1.7rem;
@@ -12,17 +13,13 @@ const Header = withTheme()(styled.h1`
   margin: 0;
   font-weight: 500;
   color: ${({ theme }) => theme.palette.secondary.contrastText};
-`);
-
-const Wrapper = withTheme()(styled.div`
-  background-color: ${({ theme }) => theme.palette.secondary.dark};
-`);
+`)
 
 const Topic = ({ children }) => (
-  <Wrapper>
+  <DarkWrapper>
     <Header>{children}</Header>
-  </Wrapper>
-);
+  </DarkWrapper>
+)
 
 const GuidesPage = () => (
   <Layout>
@@ -160,6 +157,6 @@ const GuidesPage = () => (
       `}
     </ConfigurableCodeBlock>
   </Layout>
-);
+)
 
-export default GuidesPage;
+export default GuidesPage
