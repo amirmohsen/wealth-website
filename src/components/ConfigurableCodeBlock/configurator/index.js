@@ -1,85 +1,82 @@
-const acorn = require('acorn');
-const walk = require('acorn-walk');
-const escodegen = require('escodegen');
+const acorn = require('acorn')
+const walk = require('acorn-walk')
+const escodegen = require('escodegen')
 // const splitAt = require('split-at');
 
-const generateESM = ({
-  importedNames
-}) => {
+const generateESM = ({ importedNames }) => {
   return importedNames.map(importedName => ({
     type: 'ImportDeclaration',
     specifiers: [],
     source: {
       type: 'Literal',
-      value: `wealth/methods/${importedName}`
-    }
-  }));
-};
+      value: `wealth/methods/${importedName}`,
+    },
+  }))
+}
 
 const generateCJS = ({ importedNames }) => {
   return importedNames.map(importedName => ({
-    "type": "ExpressionStatement",
-    "expression": {
-      "type": "CallExpression",
-      "callee": {
-        "type": "Identifier",
-        "name": "require"
+    type: 'ExpressionStatement',
+    expression: {
+      type: 'CallExpression',
+      callee: {
+        type: 'Identifier',
+        name: 'require',
       },
-      "arguments": [
+      arguments: [
         {
-          "type": "Literal",
-          "value": `wealth/node/methods/${importedName}`
-        }
-      ]
-    }
-  }));
-};
+          type: 'Literal',
+          value: `wealth/node/methods/${importedName}`,
+        },
+      ],
+    },
+  }))
+}
 
 const convertToCJS = ({ importedNames, body, nodeIndex, source }) => {
-  const newSource = source.replace('wealth', 'wealth/node');
+  const newSource = source.replace('wealth', 'wealth/node')
 
-  const imports = importedNames
-    .map(importedName => ({
-      type: 'Property',
-      shorthand: true,
-      key: {
-        type: 'Identifier',
-        name: importedName
-      },
-      kind: 'init',
-      value: {
-        type: 'Identifier',
-        name: importedName
-      }
-    }));
+  const imports = importedNames.map(importedName => ({
+    type: 'Property',
+    shorthand: true,
+    key: {
+      type: 'Identifier',
+      name: importedName,
+    },
+    kind: 'init',
+    value: {
+      type: 'Identifier',
+      name: importedName,
+    },
+  }))
 
   body[nodeIndex] = {
-    "type": "VariableDeclaration",
-    "declarations": [
+    type: 'VariableDeclaration',
+    declarations: [
       {
-        "type": "VariableDeclarator",
-        "id": {
-          "type": "ObjectPattern",
-          "properties": imports
+        type: 'VariableDeclarator',
+        id: {
+          type: 'ObjectPattern',
+          properties: imports,
         },
-        "init": {
-          "type": "CallExpression",
-          "callee": {
-            "type": "Identifier",
-            "name": "require"
+        init: {
+          type: 'CallExpression',
+          callee: {
+            type: 'Identifier',
+            name: 'require',
           },
-          "arguments": [
+          arguments: [
             {
-              "type": "Literal",
-              "value": newSource
-            }
-          ]
-        }
-      }
+              type: 'Literal',
+              value: newSource,
+            },
+          ],
+        },
+      },
     ],
-    "kind": "const"
-  };
-};
+    kind: 'const',
+  }
+}
 
 const methods = [
   'add',
@@ -97,86 +94,98 @@ const methods = [
   'allocate',
   'allocateBy',
   'format',
-  'parse'
-];
+  'parse',
+]
 
-const convertToOO = (node) => {
-  let name = 'Money';
+const convertToOO = node => {
+  let name = 'Money'
 
   if (node.callee.name !== 'parse') {
-    ({ name } = node.arguments.shift());
+    ;({ name } = node.arguments.shift())
   }
 
   node.callee = {
     type: 'MemberExpression',
     object: {
       type: 'Identifier',
-      name
+      name,
     },
     property: {
       type: 'Identifier',
-      name: node.callee.name
-    }
-  };
-};
+      name: node.callee.name,
+    },
+  }
+}
 
 const handleImports = ({
   parsed,
   importType,
   usageParadigm,
-  importModularity
+  importModularity,
 }) => {
   walk.ancestor(parsed, {
     ImportDeclaration(node, ancestors) {
-      let source = node.source.value;
-      const nodeIndex = ancestors[0].body.indexOf(node);
+      let source = node.source.value
+      const nodeIndex = ancestors[0].body.indexOf(node)
 
-      if (!node.specifiers.length || node.specifiers[0].type === 'ImportDefaultSpecifier') {
-        return;
+      if (
+        !node.specifiers.length ||
+        node.specifiers[0].type === 'ImportDefaultSpecifier'
+      ) {
+        return
       }
 
-      const importedNames = node.specifiers.map(specifier => specifier.imported.name);
+      const importedNames = node.specifiers.map(
+        specifier => specifier.imported.name
+      )
 
       if (usageParadigm === 'oo' && source === 'wealth/fn') {
-        let imports = [];
+        let imports = []
         if (importModularity === 'modular') {
           if (importType === 'esm') {
             imports = generateESM({
-              importedNames
-            });
-          }
-          else {
+              importedNames,
+            })
+          } else {
             imports = generateCJS({
-              importedNames
-            });
+              importedNames,
+            })
           }
         }
-        ancestors[0].body.splice(nodeIndex, 1, ...imports);
-        return;
+        ancestors[0].body.splice(nodeIndex, 1, ...imports)
+        return
       }
 
-      if (usageParadigm === 'oo' && source === 'wealth' && importModularity === 'full') {
-        node.source.value = source = 'wealth/full';
+      if (
+        usageParadigm === 'oo' &&
+        source === 'wealth' &&
+        importModularity === 'full'
+      ) {
+        node.source.value = source = 'wealth/full'
       }
 
       if (importType === 'esm') {
-        return;
+        return
       }
 
       convertToCJS({
         body: ancestors[0].body,
         importedNames,
         nodeIndex,
-        source
+        source,
       })
     },
     CallExpression(node) {
-      if (usageParadigm === 'oo' && node.callee.type === 'Identifier' && methods.includes(node.callee.name)) {
-        convertToOO(node);
+      if (
+        usageParadigm === 'oo' &&
+        node.callee.type === 'Identifier' &&
+        methods.includes(node.callee.name)
+      ) {
+        convertToOO(node)
       }
-    }
-  });
-};
+    },
+  })
+}
 
 // const splitSourceIntoCommentsAndCodeBlocks = (source) => {
 //   const regex = /^\/\/.+$/gm;
@@ -196,30 +205,30 @@ const configurator = ({
   source,
   importType,
   usageParadigm,
-  importModularity
+  importModularity,
 }) => {
   // console.log(splitSourceIntoCommentsAndCodeBlocks(source));
   const parsed = acorn.parse(source, {
-    sourceType: 'module'
-  });
+    sourceType: 'module',
+  })
 
   handleImports({
     parsed,
     importType,
     usageParadigm,
-    importModularity
-  });
+    importModularity,
+  })
 
   const code = escodegen.generate(parsed, {
     format: {
       indent: {
         style: '  ',
-        quotes: 'single'
-      }
-    }
-  });
+        quotes: 'single',
+      },
+    },
+  })
 
-  return code.replace(/\{(.+)\}/gm, '{ $1 }');
-};
+  return code.replace(/\{(.+)\}/gm, '{ $1 }')
+}
 
-export default configurator;
+export default configurator

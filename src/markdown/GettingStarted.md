@@ -53,7 +53,7 @@ import 'wealth/methods/add'; // Only import once to modify the Money prototype
 
 #### Usage
 ```js
-const moneyA = new Money('15.60', 'USD'); // or Money.init('15.60', 'USD')
-const moneyB = new Money('89.13', 'USD'); // or Money.init('89.13', 'USD')
+const moneyA = Money.init('15.60', 'USD'); // or Money.init('15.60', 'USD')
+const moneyB = Money.init('89.13', 'USD'); // or Money.init('89.13', 'USD')
 const total = moneyA.add(moneyB);
 ```
