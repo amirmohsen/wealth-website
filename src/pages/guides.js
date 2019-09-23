@@ -1,10 +1,11 @@
-import React from 'react';
-import Layout from '../components/Layout';
-import SEO from '../components/seo';
-import 'typeface-roboto';
-import styled from 'styled-components';
-import { withTheme } from '@material-ui/core/styles';
-import ConfigurableCodeBlock from '../components/ConfigurableCodeBlock';
+import React from 'react'
+import Layout from '../components/Layout'
+import SEO from '../components/seo'
+import 'typeface-roboto'
+import styled from 'styled-components'
+import { withTheme } from '@material-ui/core/styles'
+import ConfigurableCodeBlock from '../components/ConfigurableCodeBlock'
+import DarkWrapper from '../components/DarkWrapper'
 
 const Header = withTheme()(styled.h1`
   font-size: 1.7rem;
@@ -12,17 +13,13 @@ const Header = withTheme()(styled.h1`
   margin: 0;
   font-weight: 500;
   color: ${({ theme }) => theme.palette.secondary.contrastText};
-`);
-
-const Wrapper = withTheme()(styled.div`
-  background-color: ${({ theme }) => theme.palette.secondary.dark};
-`);
+`)
 
 const Topic = ({ children }) => (
-  <Wrapper>
+  <DarkWrapper>
     <Header>{children}</Header>
-  </Wrapper>
-);
+  </DarkWrapper>
+)
 
 const GuidesPage = () => (
   <Layout>
@@ -60,11 +57,11 @@ const GuidesPage = () => (
         import { allocate, allocateTo } from 'wealth/fn';
 
         // Allocation by ratios
-        const inheritance = Money.init('5000000', 'EUR');
+        const inheritance = Money.init('5000.00', 'EUR');
         const ratios = [63, 22, 15]; // ratios
         const inheritedShares = allocate(inheritance, ratios);
         // Equal Allocation
-        const expenses = Money.init('79595', 'EUR');
+        const expenses = Money.init('795.95', 'EUR');
         const expenseShares = allocateTo(expenses, 10); // Equal (or nearly equal) shares of expenses
       `}
     </ConfigurableCodeBlock>
@@ -73,43 +70,38 @@ const GuidesPage = () => (
       {`
         import { Money, Currency } from 'wealth';
         import {
-          getRegisteredCurrency,
-          getAllRegisteredCurrencies,
-          registerCurrency,
-          registerMultipleCurrencies,
-          isCurrencyRegistered,
-          deregisterCurrency
+          registerCurrency
         } from 'wealth/store';
         import {
           GBP
         } from 'wealth/iso';
 
-        register(GBP);
+        registerCurrency(GBP);
 
-        register({
+        registerCurrency({
           code: 'XBT',
           symbol: 'Ƀ'
         });
 
-        const gbpCurrencyInstance = new Currency('GBP');
-        const moneyA = new Money('900.00', gbpCurrencyInstance);
-        const moneyB = new Money('900.00', 'GBP');
-        const moneyC = new Money('900.00', 'XBT');
+        const gbpCurrencyInstance = Currency.init('GBP');
+        const moneyA = Money.init('900.00', gbpCurrencyInstance);
+        const moneyB = Money.init('900.00', 'GBP');
+        const moneyC = Money.init('900.00', 'XBT');
       `}
     </ConfigurableCodeBlock>
     <Topic>Formatting and Parsing</Topic>
     <ConfigurableCodeBlock>
       {`
         import { Money } from 'wealth';
-        import { register } from 'wealth/store';
+        import { registerCurrency } from 'wealth/store';
         import { USD } from 'wealth/iso';
         import { format } from 'wealth/fn';
 
-        register(USD);
+        registerCurrency(USD);
 
         const money = Money.init('5000.00', 'USD');
-        money.format() === '$5,000.00'
-        money.format({
+        format(money) === '$5,000.00'
+        format(money, {
           pattern: '%ns%s%v',
           thousandsSeparator: ',',
           decimalSeparator: '.'
@@ -122,8 +114,7 @@ const GuidesPage = () => (
         import { Money } from 'wealth';
 
         const money = Money.init('1.00', 'USD');
-        money.toJSON(); // {amount: '1.00', currency: 'USD'}
-        JSON.stringify(money); // {amount: '1.00', currency: 'USD'}
+        JSON.stringify(money) === '{ "amount": "1.00", "currency": "USD" }'
       `}
     </ConfigurableCodeBlock>
     <Topic>Error Handling</Topic>
@@ -137,29 +128,29 @@ const GuidesPage = () => (
         } from 'wealth/errors';
 
         try {
-          // operations
+          console.log('Some Wealth operations');
         }
         catch(e) {
           if(e instanceof CurrencyMismatchError) {
-            // Thrown when the two sides of the operation use different currencies
+            console.log('Thrown when the two sides of the operation use different currencies');
           }
           else if(e instanceof InvalidCurrencyError) {
-            // Thrown when invalid or missing currency code provided
+            console.log('Thrown when invalid or missing currency code provided');
           }
           else if(e instanceof WrongInputError) {
-            // Thrown when bad input is provided to various methods
+            console.log('Thrown when bad input is provided to various methods');
           }
 
           if(e instanceof WealthError) {
-            // All custom errors produced by Wealth inherit "WealthError"
+            console.log('All custom errors produced by Wealth inherit "WealthError"');
           }
           else {
-            // All other errors
+            console.log('All other errors');
           }
         }
       `}
     </ConfigurableCodeBlock>
   </Layout>
-);
+)
 
-export default GuidesPage;
+export default GuidesPage

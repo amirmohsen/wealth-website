@@ -10,6 +10,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import HomeLink from './HomeLink';
 import Container from '../Container';
 import Navigation from './Navigation';
+import GitHubLink from './GitHubLink';
 
 const InnerWrap = styled.div`
   display: flex;
@@ -90,6 +91,7 @@ const Header = ({ siteTitle }) => (
         </HomeLink>
         <InnerWrap>
           <Navigation />
+          <GitHubLink />
         </InnerWrap>
         {/* <Grow /> */}
         {/* <SearchWrapper>

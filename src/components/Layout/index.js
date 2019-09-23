@@ -1,12 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { StaticQuery, graphql } from 'gatsby'
-import styled, { createGlobalStyle } from 'styled-components';
-import { MuiThemeProvider } from '@material-ui/core/styles';
-import 'prismjs/plugins/line-numbers/prism-line-numbers.css';
-import Header from '../Header';
-import theme from './theme';
-import ConfigurableCodeBlockProvider from '../ConfigurableCodeBlock/Provider';
+import styled, { createGlobalStyle } from 'styled-components'
+import { MuiThemeProvider } from '@material-ui/core/styles'
+import 'prismjs/plugins/line-numbers/prism-line-numbers.css'
+import Header from '../Header'
+import theme from './theme'
+import ConfigurableCodeBlockProvider from '../ConfigurableCodeBlock/Provider'
+import Footer from '../Footer'
 
 const GlobalStyles = createGlobalStyle`
   body {
@@ -19,7 +20,7 @@ const GlobalStyles = createGlobalStyle`
     padding-left: 1rem;
     bottom: 0;
   }
-`;
+`
 
 const query = graphql`
   query SiteTitleQuery {
@@ -29,11 +30,11 @@ const query = graphql`
       }
     }
   }
-`;
+`
 
 const ContentWrapper = styled.div`
   overflow: hidden;
-`;
+`
 
 const Layout = ({ children }) => (
   <MuiThemeProvider theme={theme}>
@@ -48,14 +49,15 @@ const Layout = ({ children }) => (
               {children}
             </ConfigurableCodeBlockProvider>
           </ContentWrapper>
+          <Footer />
         </>
       )}
     />
   </MuiThemeProvider>
-);
+)
 
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
-};
+}
 
-export default Layout;
+export default Layout
